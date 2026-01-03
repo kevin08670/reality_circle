@@ -1,0 +1,16 @@
+.VSCodeCounter/
+.vscode/
+.vs/
+Debug/
+Release/
+x64/
+CMakeSettings.json
+cmake-build*
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles/
+*.cbp
+config.h
+
+
+

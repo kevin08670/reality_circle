@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.0)
+add_subdirectory(depends/cstl)
+add_subdirectory(depends/libuv)
+add_subdirectory(depends/mbedtls)
+add_subdirectory(depends/json-c)
+add_subdirectory(xClient)
+add_subdirectory(xProxy)
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
