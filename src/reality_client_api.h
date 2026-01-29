@@ -15,7 +15,7 @@ extern "C" {
 struct reality_client_state;
 
 /* listener.c */
-int reality_run_loop_begin(struct configure *cf, void(*feedback_state)(struct reality_client_state *state, void *p), void *p);
+int reality_run_loop_begin(struct configure *cf, void(*feedback_state)(void *p, struct reality_client_state *state, const char* info), void *p);
 void reality_run_loop_shutdown(struct reality_client_state *state);
  
 #ifdef __cplusplus
