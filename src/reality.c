@@ -717,7 +717,7 @@ void on_outbound_connect_cb(uv_connect_t *req, int status) {
 	// 设置 Session ID，用于自定义的身份验证/会话重用机制
 	struct session_id sid;
 	create_session_id(&sid, ( ATOMIC_LOAD_BOOL(g_had_verified) )?1:0, conn_ctx->state->my_authinfo_md5); // 第一次连接使用 '0' 标记
-	mbedtls_ssl_set_sessionid(&conn_ctx->ssl_ctx, (unsigned char*)&sid);
+	//mbedtls_ssl_set_sessionid(&conn_ctx->ssl_ctx, (unsigned char*)&sid);
 	// 启动读事件，驱动 TLS 握手 (第一次尝试握手)
 	ret = mbedtls_ssl_handshake(&conn_ctx->ssl_ctx);
 	if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {

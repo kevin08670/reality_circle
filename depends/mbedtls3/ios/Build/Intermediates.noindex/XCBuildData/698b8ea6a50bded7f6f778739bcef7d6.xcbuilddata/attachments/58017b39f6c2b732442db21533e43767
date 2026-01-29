@@ -1,0 +1,5 @@
+ extern const unsigned char mbedtlsVersionString[];
+ extern const double mbedtlsVersionNumber;
+
+ const unsigned char mbedtlsVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:mbedtls  PROJECT:mbedtls3-1" "\n";
+ const double mbedtlsVersionNumber __attribute__ ((used)) = (double)1.;
