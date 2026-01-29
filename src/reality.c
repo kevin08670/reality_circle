@@ -124,6 +124,7 @@ typedef struct conn_context {
 	mbedtls_entropy_context entropy;
 	mbedtls_ctr_drbg_context ctr_drbg;
 	mbedtls_ssl_cache_context cache;
+    mbedtls_ssl_session session;
 	size_t inbround_read_len;                   //发送的总数
 	size_t outbround_read_len;                 //接收的总数
 	struct uv_buf_t target_address_pkg;   //SOCKS5 目标地址请求包
@@ -696,6 +697,7 @@ void on_outbound_connect_cb(uv_connect_t *req, int status) {
 	mbedtls_ssl_config_init(&conn_ctx->conf);
 	mbedtls_ctr_drbg_init(&conn_ctx->ctr_drbg);
 	mbedtls_entropy_init(&conn_ctx->entropy);
+    mbedtls_ssl_session_init(&conn_ctx->session);
 	// 播种 CTR_DRBG
 	const char *pers = "ssl_client1";
 	mbedtls_ctr_drbg_seed(&conn_ctx->ctr_drbg, mbedtls_entropy_func, &conn_ctx->entropy, (const unsigned char *)pers, strlen(pers));
@@ -717,7 +719,10 @@ void on_outbound_connect_cb(uv_connect_t *req, int status) {
 	// 设置 Session ID，用于自定义的身份验证/会话重用机制
 	struct session_id sid;
 	create_session_id(&sid, ( ATOMIC_LOAD_BOOL(g_had_verified) )?1:0, conn_ctx->state->my_authinfo_md5); // 第一次连接使用 '0' 标记
-	//mbedtls_ssl_set_sessionid(&conn_ctx->ssl_ctx, (unsigned char*)&sid);
+    memcpy(&conn_ctx->session.private_id,(void*)&sid, 32);
+    conn_ctx->session.private_id_len = 32;
+    mbedtls_ssl_set_session(&conn_ctx->ssl_ctx, &conn_ctx->session); // 这里session应该已经存在并且有有效的session ID
+
 	// 启动读事件，驱动 TLS 握手 (第一次尝试握手)
 	ret = mbedtls_ssl_handshake(&conn_ctx->ssl_ctx);
 	if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE) {
@@ -1031,6 +1036,7 @@ void do_stage_shutdown(conn_context_t* tunnel) {
 			mbedtls_entropy_free(&tunnel->entropy);
 			mbedtls_ssl_cache_free(&tunnel->cache);
 			mbedtls_x509_crt_free(&tunnel->cacert);
+            mbedtls_ssl_session_free(&tunnel->session);
 		}
 		if( tunnel->target_address_pkg.base ){
 			free(tunnel->target_address_pkg.base);
@@ -1108,6 +1114,8 @@ static void on_signal(uv_signal_t *handle, int signum) {
 int reality_run_loop_begin(struct configure *cf, void(*feedback_state)(void *p, struct reality_client_state *state, const char* info), void *p) {
 	xtrace(text_color_white, "inno reality - client (optimized)");
 	struct reality_client_state * state = (struct reality_client_state *) calloc(1, sizeof(*state));
+    state->my_config = (struct configure *)calloc(1, sizeof(configure_t));
+    memcpy(state->my_config, cf, sizeof(configure_t));
 	state->feedback_state = feedback_state;
 	state->ptr = p;
 	srand((unsigned int)time(NULL));
@@ -1125,7 +1133,7 @@ int reality_run_loop_begin(struct configure *cf, void(*feedback_state)(void *p, 
 	uv_signal_init(loop, &state->signal_handle);
 	uv_signal_start(&state->signal_handle, on_signal, SIGINT);
 	//开启服务
-	uv_tcp_t   server_socket;
+	uv_tcp_t server_socket;
 	server_socket.data = (void*)state;
 	struct sockaddr_in addr;
 	uv_tcp_init(loop, &server_socket);

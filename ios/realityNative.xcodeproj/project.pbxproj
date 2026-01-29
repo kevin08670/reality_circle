@@ -50,7 +50,6 @@
 		B50044882F2B43C300375B4D /* reality.c in Sources */ = {isa = PBXBuildFile; fileRef = B500447B2F2B43C300375B4D /* reality.c */; };
 		B50044892F2B43C300375B4D /* sockaddr_universal.c in Sources */ = {isa = PBXBuildFile; fileRef = B50044802F2B43C300375B4D /* sockaddr_universal.c */; };
 		B500448A2F2B43C300375B4D /* socks5.c in Sources */ = {isa = PBXBuildFile; fileRef = B50044822F2B43C300375B4D /* socks5.c */; };
-		B500448B2F2B43C300375B4D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = B50044772F2B43C300375B4D /* CMakeLists.txt */; };
 		B500448C2F2B43C300375B4D /* s5.h in Headers */ = {isa = PBXBuildFile; fileRef = B500447D2F2B43C300375B4D /* s5.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B500448D2F2B43C300375B4D /* text_in_color.h in Headers */ = {isa = PBXBuildFile; fileRef = B50044832F2B43C300375B4D /* text_in_color.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B500448E2F2B43C300375B4D /* configure.h in Headers */ = {isa = PBXBuildFile; fileRef = B50044782F2B43C300375B4D /* configure.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -64,7 +63,6 @@
 		B50044962F2B43C300375B4D /* reality.c in Sources */ = {isa = PBXBuildFile; fileRef = B500447B2F2B43C300375B4D /* reality.c */; };
 		B50044972F2B43C300375B4D /* sockaddr_universal.c in Sources */ = {isa = PBXBuildFile; fileRef = B50044802F2B43C300375B4D /* sockaddr_universal.c */; };
 		B50044982F2B43C300375B4D /* socks5.c in Sources */ = {isa = PBXBuildFile; fileRef = B50044822F2B43C300375B4D /* socks5.c */; };
-		B50044992F2B43C300375B4D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = B50044772F2B43C300375B4D /* CMakeLists.txt */; };
 		B500449A2F2B43C300375B4D /* s5.h in Headers */ = {isa = PBXBuildFile; fileRef = B500447D2F2B43C300375B4D /* s5.h */; };
 		B500449B2F2B43C300375B4D /* text_in_color.h in Headers */ = {isa = PBXBuildFile; fileRef = B50044832F2B43C300375B4D /* text_in_color.h */; };
 		B500449C2F2B43C300375B4D /* configure.h in Headers */ = {isa = PBXBuildFile; fileRef = B50044782F2B43C300375B4D /* configure.h */; };
@@ -206,7 +204,6 @@
 		3A57A60A206F9D44002F1F2D /* realityNative.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = realityNative.h; sourceTree = "<group>"; };
 		3A57A60B206F9D44002F1F2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A95CBA42070C7DA00E507E3 /* realityNative.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = realityNative.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B50044772F2B43C300375B4D /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = CMakeLists.txt; path = ../src/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		B50044782F2B43C300375B4D /* configure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = configure.h; path = ../src/configure.h; sourceTree = SOURCE_ROOT; };
 		B50044792F2B43C300375B4D /* configure.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = configure.c; path = ../src/configure.c; sourceTree = SOURCE_ROOT; };
 		B500447A2F2B43C300375B4D /* mycert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mycert.h; path = ../src/mycert.h; sourceTree = SOURCE_ROOT; };
@@ -325,7 +322,6 @@
 		3A300B4C206FF5EA00ABE7C2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B50044772F2B43C300375B4D /* CMakeLists.txt */,
 				B50044782F2B43C300375B4D /* configure.h */,
 				B50044792F2B43C300375B4D /* configure.c */,
 				B500447A2F2B43C300375B4D /* mycert.h */,
@@ -624,7 +620,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B500448B2F2B43C300375B4D /* CMakeLists.txt in Resources */,
 				0AED9B372CD8C7B20035ED49 /* json_config.h.in in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -633,7 +628,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B50044992F2B43C300375B4D /* CMakeLists.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

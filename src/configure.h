@@ -33,12 +33,18 @@ typedef struct configure{
 	unsigned short local_port;
 	char remote_host[32];
 	unsigned short remote_port;
-	unsigned short app_type;
-	unsigned long long user_id;
 	char user_name[40];
 	char user_cipher[40];
 	char conn_id[16];
 	char fake_sni[256];
+    
+    uint8_t app_type;   //1:iphone 2:mac 3:android 4:window 5:
+    uint32_t user_id;
+    char * device_id;
+    uint32_t vaild_date;
+    uint16_t speed;
+    uint32_t local_keep_live;
+    uint32_t min_version;
 #elif INNO_SERVER
 	unsigned short port;
 #endif 
