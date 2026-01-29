@@ -4758,6 +4758,11 @@ int mbedtls_ssl_handshake_clienthello(mbedtls_ssl_context *ssl)
 		}
 	}
 
+
+	//mbedtls_ssl_handshake_server_step(ssl);
+
+
+
 	MBEDTLS_SSL_DEBUG_MSG(2, ("<= handshake"));
 
 	return ret;
@@ -4824,7 +4829,11 @@ int mbedtls_ssl_handshake_workstatus(mbedtls_ssl_context *ssl)
 	MBEDTLS_SSL_DEBUG_MSG(2, ("=> handshake"));
 
 	/* Main handshake loop */
-	mbedtls_ssl_tls13_handshake_client_step(ssl);
+	int ret = mbedtls_ssl_tls13_handshake_client_step(ssl);
+
+    if( ret > 0 ){
+        ret = 0;
+    }
 
 	MBEDTLS_SSL_DEBUG_MSG(2, ("<= handshake"));
 

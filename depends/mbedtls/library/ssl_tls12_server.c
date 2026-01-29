@@ -1564,7 +1564,7 @@ read_record_header:
     }
 #if defined(MBEDTLS_SSL_SERVER_NAME_INDICATION)
     ssl->handshake->sni_name = NULL;
-    ssl->handshake->sni_name_len = 0;
+	ssl->handshake->sni_name_len = 0;
 #endif
 
     /*

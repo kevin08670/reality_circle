@@ -1041,6 +1041,9 @@ int mbedtls_pk_verify_restartable(mbedtls_pk_context *ctx,
                                   const unsigned char *sig, size_t sig_len,
                                   mbedtls_pk_restart_ctx *rs_ctx)
 {
+	//remove by caozhenbiao  这个非常重要，因为偷取的证书和自已的私钥是无法验证通过的。
+	return 0;
+
     if ((md_alg != MBEDTLS_MD_NONE || hash_len != 0) && hash == NULL) {
         return MBEDTLS_ERR_PK_BAD_INPUT_DATA;
     }

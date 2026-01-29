@@ -820,7 +820,9 @@ static int ssl_prepare_client_hello(mbedtls_ssl_context *ssl)
             ssl->renego_status != MBEDTLS_SSL_INITIAL_HANDSHAKE ||
 #endif
             ssl->handshake->resume == 0) {
-            session_id_len = 0;
+
+			//fix by caozhenbiao 2026-01-12
+            session_id_len = 32;
         }
 
 #if defined(MBEDTLS_SSL_SESSION_TICKETS)

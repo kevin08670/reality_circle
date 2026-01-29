@@ -2421,8 +2421,10 @@ start_processing:
                                         p, sig_len);
         } else
 #endif /* MBEDTLS_X509_RSASSA_PSS_SUPPORT */
-        ret = mbedtls_pk_verify_restartable(peer_pk,
-                                            md_alg, hash, hashlen, p, sig_len, rs_ctx);
+
+		ret = mbedtls_pk_verify_restartable(peer_pk,
+			                                    md_alg, hash, hashlen, p, sig_len, rs_ctx);
+
 
         if (ret != 0) {
             int send_alert_msg = 1;

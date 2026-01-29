@@ -2,28 +2,38 @@
 1. 支持TLS1.2、1.3 加密代理传输
 2. 支持多域名，多证书部署
 3. 支持TlsInTls处理
+4. 自适应窃取证书
 
 ## 项目介绍
-    xProxy : inno-reality代理服务器
-    xClient: 客户端
-
+    reality 协议代理方案
+  
 ## git
    git clone https://git.inconnecting.com/iprotocol/inno-reality.git
 
 ## 编译
     支持全平台编译
-### linux, ubuntu, macOS
+    
+### linux, ubuntu
     mkdir build
     cd build
     cmake .. & make
     cmake -D CMAKE_BUILD_TYPE=Release .. && make
 
-### windows 解决方案
-    用VC打开 reality.sln 即可,已关连第三方库等
+### windows
+    visual stuido 2015+
+    打开 ./win32/realityNative.sln 编译即可
+
+### IOS
+    mkdir ios
+    cd ios
+    cmake .. -G "Xcode" -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_SYSROOT=iphoneos -DCMAKE_OSX_DEPLOYMENT_TARGET=12.0 -DENABLE_TESTING=OFF -DENABLE_PROGRAMS=OFF -DCMAKE_POLICY_VERSION_MININUM=3.5
+
+### ANDROID
+    android
  
 ## Usage
-    ./xProxy
-    ./xClient -s192.168.1.1 -p443
+    ./realityServer
+    ./reality -s192.168.1.1 -p443 -fbaidu.com
 ### 参数说明
 
 ### 测试
