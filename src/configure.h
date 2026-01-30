@@ -37,7 +37,6 @@ typedef struct configure{
 	char user_cipher[40];
 	char conn_id[16];
 	char fake_sni[256];
-    
     uint8_t app_type;   //1:iphone 2:mac 3:android 4:window 5:
     uint32_t user_id;
     char * device_id;

@@ -1088,7 +1088,82 @@ static void tunnel_dispatcher(conn_context_t* tunnel, socket_ctx_t* socket) {
 		break;
 	}
 }
-
+ 
+/**
+*认证数据包发送
+*
+*/
+int client_authtificate(struct configure * cf ){
+    int ret = -1;
+    struct configure config;
+    memcpy(&config, cf,sizeof(struct configure));
+    mbedtls_net_context server_fd;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+    mbedtls_ssl_context ssl;
+    mbedtls_ssl_config conf;
+    mbedtls_ssl_session session;
+    // 1. 初始化
+    const char *pers = "ssl_client1";
+    mbedtls_net_init(&server_fd);
+    mbedtls_ssl_init(&ssl);
+    mbedtls_ssl_config_init(&conf);
+    mbedtls_ctr_drbg_init(&ctr_drbg);
+    mbedtls_entropy_init(&entropy);
+    mbedtls_ssl_session_init(&session);
+    
+    mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *)pers, strlen(pers));
+    if ((ret = mbedtls_net_connect(&server_fd, config.remote_host, "12443", MBEDTLS_NET_PROTO_TCP)) != 0) {
+        printf("连接失败: -0x%x\n", -ret);
+    }
+    mbedtls_ssl_config_defaults(&conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT);
+    mbedtls_ssl_conf_authmode(&conf, MBEDTLS_SSL_VERIFY_NONE); // **不验证**服务器证书 (MBEDTLS_SSL_VERIFY_NONE)
+    mbedtls_ssl_conf_rng(&conf, mbedtls_ctr_drbg_random, &ctr_drbg);  // 设置随机数生成器
+    
+    // 设置 Session ID，用于自定义的身份验证/会话重用机制
+    uint8_t authinfo_md5[32] = {0};
+    struct session_id sid;
+    create_session_id(&sid, 0, authinfo_md5); // 第一次连接使用 '0' 标记
+    memcpy(&session.private_id,authinfo_md5, 32);
+    session.private_id_len = 32;
+    mbedtls_ssl_set_session(&ssl, &session); // 这里session应该已经存在并且有有效的session ID
+    
+    //
+    if ((ret = mbedtls_ssl_setup(&ssl, &conf)) != 0) goto exit;
+    mbedtls_ssl_set_hostname(&ssl, config.fake_sni);
+    mbedtls_ssl_set_bio(&ssl, &server_fd, mbedtls_net_send, mbedtls_net_recv, NULL);
+    // 5. 分步握手以获取数据
+    while (ssl.private_state != MBEDTLS_SSL_HANDSHAKE_OVER) {
+        ret = mbedtls_ssl_handshake_step(&ssl);
+        if (ret != 0 && ret != MBEDTLS_ERR_SSL_WANT_READ && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
+            printf("握手出错: -0x%x\n", -ret);
+            break;
+        }
+    }
+    //获取证书
+    const struct mbedtls_x509_crt * crt = mbedtls_ssl_get_peer_cert(&ssl);
+    if (crt != NULL) {
+  
+    }
+    //读取认证数据
+    do {
+        unsigned char *buf = (unsigned char *)malloc(1024);
+        int ret = mbedtls_ssl_read(&ssl, buf,1024);
+        if ( ret > 0 ) {
+            xtrace(text_color_white, "auth data: %s %d", buf, ret);
+ 
+        }
+    } while (ret > 0);
+    //认证数据检查
+exit:
+    mbedtls_ssl_free(&ssl);
+    mbedtls_ssl_config_free(&conf);
+    mbedtls_ctr_drbg_free(&ctr_drbg);
+    mbedtls_entropy_free(&entropy);
+    mbedtls_net_free(&server_fd);
+    return 0;
+}
+        
 /**
  * Walk callback for closing all handles
  */
@@ -1113,6 +1188,7 @@ static void on_signal(uv_signal_t *handle, int signum) {
  */
 int reality_run_loop_begin(struct configure *cf, void(*feedback_state)(void *p, struct reality_client_state *state, const char* info), void *p) {
 	xtrace(text_color_white, "inno reality - client (optimized)");
+    int authret = client_authtificate(cf);
 	struct reality_client_state * state = (struct reality_client_state *) calloc(1, sizeof(*state));
     state->my_config = (struct configure *)calloc(1, sizeof(configure_t));
     memcpy(state->my_config, cf, sizeof(configure_t));
@@ -1166,7 +1242,7 @@ void reality_run_loop_shutdown(struct reality_client_state* state) {
 	uv_close((uv_handle_t*)&state->signal_handle, NULL);
 	xtrace(text_color_white, "terminated.\n");
 }
-
+    
 /**
  * main 主函数
  */
